@@ -110,6 +110,7 @@ function nextItem() {
   if (currentItem !== carouselItemWrapper.childElementCount - 1) {
     currentItem += 1;
   }
+    console.log(currentItem)
   carouselItemWrapper.style.transform = `translateX(-${
     (slideWidth + 32) * currentItem
   }px)`;
@@ -129,14 +130,22 @@ function onCarouselSwipe() {
   let touchendX = 0;
   carouselItemWrapper.addEventListener("touchstart", (e) => {
     touchstartX = e.changedTouches[0].screenX;
+  console.log("touchstart")
+    
   });
   carouselItemWrapper.addEventListener("touchend", (e) => {
     touchendX = e.changedTouches[0].screenX;
+    console.log("touchend")
+    
     if (touchendX < touchstartX && Math.abs(touchendX - touchstartX) > 50) {
+    console.log("next")
+      
       nextItem();
     }
 
     if (touchendX > touchstartX && Math.abs(touchendX - touchstartX) > 50) {
+    console.log("prev")
+      
       previousItem();
     }
   });
