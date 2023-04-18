@@ -5505,7 +5505,6 @@ h1,h2,h3,h4,h5,h6 {
 .carousel__item-wrapper {
     display: grid;
     gap: 2rem;
-        touch-action: none;
     cursor:pointer;
 }
 
@@ -5547,7 +5546,9 @@ h1,h2,h3,h4,h5,h6 {
 
 .carousel__item {
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    cursor:pointer;
+    
 }
 
 .carousel__item>.button,.carousel__item>.country-selector__list-mobile--multilanguage,.country-selector__list-mobile>li.carousel__item>a:not(.country-selector__list-mobile--multilanguage) {
