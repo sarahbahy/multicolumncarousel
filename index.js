@@ -132,7 +132,7 @@ const touchSlide = (() => {
 
     // Do this on initial touch on screen
     carouselItemWrapper.addEventListener("touchstart", (e) => {
-      consoloe.log("started",e.touches[0].clientX)
+      console.log("started",e.touches[0].clientX)
         // get the touche position of X on the screen
         start = e.touches[0].clientX
         // (each slide with) the width of the slider container divided by the number of slides
@@ -144,7 +144,7 @@ const touchSlide = (() => {
     carouselItemWrapper.addEventListener("touchmove", (e) => {
         // prevent default function
         e.preventDefault()
-      consoloe.log("moving",e.touches[0].clientX)
+      console.log("moving",e.touches[0].clientX)
       
         // get the touche position of X on the screen when dragging stops
         move = e.touches[0].clientX
@@ -157,7 +157,7 @@ const touchSlide = (() => {
     const mobile = (e) => {
         // if change is greater than a quarter of sliderWidth, next else Do NOTHING
         change > 50  ? nextItem() : null;
-      consoloe.log("end")
+      console.log("end")
       
         // if change * -1 is greater than a quarter of sliderWidth, prev else Do NOTHING
         (change * -1) > 50 ? previousItem() : null;
