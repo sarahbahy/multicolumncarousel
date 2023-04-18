@@ -136,6 +136,7 @@ const touchSlide = (() => {
         start = e.touches[0].clientX
         // (each slide with) the width of the slider container divided by the number of slides
         //sliderWidth = slider.clientWidth/trail.length
+      return false;
     })
     
     // Do this on touchDrag on screen
@@ -145,7 +146,9 @@ const touchSlide = (() => {
         // get the touche position of X on the screen when dragging stops
         move = e.touches[0].clientX
         // Subtract initial position from end position and save to change variabla
-        change = start - move
+        change = start - move;
+      return false;
+      
     })
 
     const mobile = (e) => {
@@ -155,6 +158,8 @@ const touchSlide = (() => {
         (change * -1) > 50 ? previousItem() : null;
         // reset all variable to 0
         [start, move, change, sliderWidth] = [0,0,0,0]
+      return false;
+      
     }
     // call mobile on touch end
     carouselItemWrapper.addEventListener("touchend", mobile)
