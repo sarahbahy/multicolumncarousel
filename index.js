@@ -37,33 +37,7 @@ function setColumns() {
       `carousel__item-wrapper--col-${carousel.dataset.carouselColumns}`
     );
   }
-}
-function setAccessibilityAttributes() {
-  carouselItemWrapper
-    .querySelectorAll(".carousel__item")
-    .forEach((item) => (item.ariaHidden = true));
-  carouselItemWrapper
-    .querySelectorAll("a")
-    .forEach((link) => link.setAttribute("tabindex", "-1"));
-  if (window.innerWidth > 992) {
-    let items =
-      carouselItemWrapper.childElementCount < carousel.dataset.carouselColumns
-        ? carouselItemWrapper.childElementCount
-        : carousel.dataset.carouselColumns;
-    for (let i = 0; i < items; i++) {
-      carouselItemWrapper.children[currentItem + i].ariaHidden = false;
-      carouselItemWrapper.children[currentItem + i]
-        .querySelectorAll("a")
-        .forEach((link) => link.removeAttribute("tabindex"));
-      console.log(currentItem);
-    }
-  } else {
-    carouselItemWrapper.children[currentItem].ariaHidden = false;
-    carouselItemWrapper.children[currentItem]
-      .querySelectorAll("a")
-      .forEach((link) => link.removeAttribute("tabindex"));
-  }
-}
+
 function setActiveCircles() {
   const carouselCircles = carousel.querySelectorAll(".carousel__circle");
   carouselCircles.forEach((item) => {
@@ -99,7 +73,7 @@ function previousItem() {
     (slideWidth + 32) * currentItem
   }px)`;
   setActiveCircles();
-  setAccessibilityAttributes();
+  
 }
 
 function nextItem() {
@@ -122,7 +96,7 @@ function nextItem() {
     carouselRightButton.classList.add("carousel__arrow--right--hidden");
   }
   setActiveCircles();
-  setAccessibilityAttributes();
+  
 }
 
 
@@ -149,7 +123,6 @@ function setButtonsPosition() {
 
 carousel.classList.add("carousel--enabled");
 setButtonsPosition();
-setAccessibilityAttributes();
 carouselLeftButton.addEventListener("click", () => nextItem());
 carouselRightButton.addEventListener("click", () => previousItem());
 generateCarouselCircle();
