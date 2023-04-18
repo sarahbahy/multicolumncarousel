@@ -166,7 +166,7 @@ carousel.classList.add("carousel--enabled");
 setButtonsPosition();
 setAccessibilityAttributes();
 carouselLeftButton.addEventListener("click", () => nextItem());
-carouselRightButton.addEventListener("click", () => nextItem());
+carouselRightButton.addEventListener("click", () => previousItem());
 generateCarouselCircle();
 setActiveCircles();
 onCarouselSwipe();
