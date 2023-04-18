@@ -37,7 +37,7 @@ function setColumns() {
       `carousel__item-wrapper--col-${carousel.dataset.carouselColumns}`
     );
   }
-
+}
 function setActiveCircles() {
   const carouselCircles = carousel.querySelectorAll(".carousel__circle");
   carouselCircles.forEach((item) => {
