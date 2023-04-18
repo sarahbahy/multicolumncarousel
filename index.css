@@ -7,8 +7,7 @@ html {
 
 body {
     margin: 0;
-    touch-action: none;
-    cursor:pointer;
+
 }
 
 article,aside,footer,header,nav,section {
@@ -5505,7 +5504,9 @@ h1,h2,h3,h4,h5,h6 {
 
 .carousel__item-wrapper {
     display: grid;
-    gap: 2rem
+    gap: 2rem;
+        touch-action: none;
+    cursor:pointer;
 }
 
 @media(hover: none)and (pointer:coarse) {
