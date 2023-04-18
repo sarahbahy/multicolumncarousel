@@ -154,29 +154,36 @@ carouselLeftButton.addEventListener("click", () => nextItem());
 carouselRightButton.addEventListener("click", () => previousItem());
 generateCarouselCircle();
 setActiveCircles();
-  let touchstartX = 0;
-  let touchendX = 0;
-  carouselItemWrapper.addEventListener("touchstart", (e) => {
-    touchstartX = e.changedTouches[0].screenX;
-    console.log(touchstartX)
-  console.log("touchstart")
-    
-  });
-  carouselItemWrapper.addEventListener("touchend", (e) => {
-    touchendX = e.changedTouches[0].screenX;
-    console.log(touchendX)
-    console.log("touchend")
-    
-    if (touchendX < touchstartX && Math.abs(touchendX - touchstartX) > 50) {
-    console.log("next")
-      
-      nextItem();
-    }
+const touchSlide = (() => {
+    let start, move, change, sliderWidth
 
-    if (touchendX > touchstartX && Math.abs(touchendX - touchstartX) > 50) {
-    console.log("prev")
-      
-      previousItem();
+    // Do this on initial touch on screen
+    carouselItemWrapper.addEventListener("touchstart", (e) => {
+        // get the touche position of X on the screen
+        start = e.touches[0].clientX
+        // (each slide with) the width of the slider container divided by the number of slides
+        //sliderWidth = slider.clientWidth/trail.length
+    })
+    
+    // Do this on touchDrag on screen
+    carouselItemWrapper.addEventListener("touchmove", (e) => {
+        // prevent default function
+        e.preventDefault()
+        // get the touche position of X on the screen when dragging stops
+        move = e.touches[0].clientX
+        // Subtract initial position from end position and save to change variabla
+        change = start - move
+    })
+
+    const mobile = (e) => {
+        // if change is greater than a quarter of sliderWidth, next else Do NOTHING
+        change > 50  ? nextItem() : null;
+        // if change * -1 is greater than a quarter of sliderWidth, prev else Do NOTHING
+        (change * -1) > 50 ? previousItem() : null;
+        // reset all variable to 0
+        [start, move, change, sliderWidth] = [0,0,0,0]
     }
-  });
+    // call mobile on touch end
+    carouselItemWrapper.addEventListener("touchend", mobile)
+
 // onWindowResize(setButtonsPosition);
