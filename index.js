@@ -157,7 +157,6 @@ const touchSlide = (() => {
     const mobile = (e) => {
         // if change is greater than a quarter of sliderWidth, next else Do NOTHING
         change > 50  ? nextItem() : null;
-      console.log("end")
       
         // if change * -1 is greater than a quarter of sliderWidth, prev else Do NOTHING
         (change * -1) > 50 ? previousItem() : null;
