@@ -125,31 +125,7 @@ function nextItem() {
   setAccessibilityAttributes();
 }
 
-function onCarouselSwipe() {
-  let touchstartX = 0;
-  let touchendX = 0;
-  carouselItemWrapper.addEventListener("touchstart", (e) => {
-    touchstartX = e.changedTouches[0].screenX;
-  console.log("touchstart")
-    
-  });
-  carouselItemWrapper.addEventListener("touchend", (e) => {
-    touchendX = e.changedTouches[0].screenX;
-    console.log("touchend")
-    
-    if (touchendX < touchstartX && Math.abs(touchendX - touchstartX) > 50) {
-    console.log("next")
-      
-      nextItem();
-    }
 
-    if (touchendX > touchstartX && Math.abs(touchendX - touchstartX) > 50) {
-    console.log("prev")
-      
-      previousItem();
-    }
-  });
-}
 
 function generateCarouselCircle() {
   for (let i = 0; i < carouselItemWrapper.childElementCount; i++) {
@@ -178,5 +154,29 @@ carouselLeftButton.addEventListener("click", () => nextItem());
 carouselRightButton.addEventListener("click", () => previousItem());
 generateCarouselCircle();
 setActiveCircles();
-onCarouselSwipe();
+  let touchstartX = 0;
+  let touchendX = 0;
+  carouselItemWrapper.addEventListener("touchstart", (e) => {
+    touchstartX = e.changedTouches[0].screenX;
+    console.log(touchstartX)
+  console.log("touchstart")
+    
+  });
+  carouselItemWrapper.addEventListener("touchend", (e) => {
+    touchendX = e.changedTouches[0].screenX;
+    console.log(touchendX)
+    console.log("touchend")
+    
+    if (touchendX < touchstartX && Math.abs(touchendX - touchstartX) > 50) {
+    console.log("next")
+      
+      nextItem();
+    }
+
+    if (touchendX > touchstartX && Math.abs(touchendX - touchstartX) > 50) {
+    console.log("prev")
+      
+      previousItem();
+    }
+  });
 // onWindowResize(setButtonsPosition);
