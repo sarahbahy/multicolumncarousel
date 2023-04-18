@@ -185,5 +185,5 @@ const touchSlide = (() => {
     }
     // call mobile on touch end
     carouselItemWrapper.addEventListener("touchend", mobile)
-
+})()
 // onWindowResize(setButtonsPosition);
