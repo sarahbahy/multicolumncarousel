@@ -127,7 +127,7 @@ carouselLeftButton.addEventListener("click", () => nextItem());
 carouselRightButton.addEventListener("click", () => previousItem());
 generateCarouselCircle();
 setActiveCircles();
-  carouselItemWrapper.addEventListener("touchend", (e) => {
+  carouselItemWrapper.addEventListener("touchmove", (e) => {
     console.log("touchend", e);
     nextItem();
   });
