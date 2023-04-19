@@ -1,134 +1,128 @@
+document.addEventListener('DOMContentLoaded', function() {
+    
+  const carousels = document.querySelectorAll('.carousel');
+  carousels.forEach(function( carousel ) {
 
-const carousel = document.querySelector(".carousel");
-var currentItem = 0;
-const carouselItemWrapper = document.querySelector(".carousel__item-wrapper");
-const carouselLeftButton = document.querySelector(".carousel__arrow--left");
-const carouselRightButton = document.querySelector(".carousel__arrow--right");
-const carouselItem = document.querySelector(".carousel__item");
-const carouselCircleWrapper = document.querySelector(
-  ".carousel__circle-wrapper"
-);
+      const ele = carousel.querySelector('ul');
+      const amountvisible = Math.round(ele.offsetWidth/ele.querySelector('li:nth-child(1)').offsetWidth);
+      const bullets = carousel.querySelectorAll('ol li');
+      const slides = carousel.querySelectorAll('ul li');
+      const nextarrow = carousel.querySelector('.next');
+      const prevarrow = carousel.querySelector('.prev');
 
-function setColumns() {
-  if (carousel.dataset.carouselEnable === "true") {
-    if (carousel.dataset.carouselColumns === "4") {
-      carouselItemWrapper
-        .querySelectorAll(".carousel__item")
-        .forEach((item) =>
-          item.classList.add(
-            `col--md-6`,
-            `col--lg-${12 / carousel.dataset.carouselColumns}`
-          )
-        );
-    } else {
-      carouselItemWrapper
-        .querySelectorAll(".carousel__item")
-        .forEach((item) =>
-          item.classList.add(`col--md-${12 / carousel.dataset.carouselColumns}`)
-        );
-    }
-    if (
-      carousel.dataset.carouselColumns >= carouselItemWrapper.childElementCount
-    ) {
-      carouselRightButton.classList.add("carousel__arrow--right--hidden");
-    }
-  } else {
-    carouselItemWrapper.classList.add(
-      `carousel__item-wrapper--col-${carousel.dataset.carouselColumns}`
-    );
+      // Initialize the carousel
+      nextarrow.style.display = 'block';
+      prevarrow.style.display = 'block';
+      ele.scrollLeft = 0;
+      bullets[0].classList.add('selected');
+      slides[0].classList.add('selected');
+      if(amountvisible>1) {
+        var removeels = carousel.querySelectorAll('ol li:nth-last-child(-n + '+(amountvisible-1)+')');
+        removeels.forEach(function(removeel) {
+          removeel.remove();
+        });
+      }
+
+      const setSelected = function() {
+          bullets.forEach(function(bullet) {
+             bullet.classList.remove('selected');
+          });
+          slides.forEach(function(slide) {
+             slide.classList.remove('selected');
+          });
+          const scrolllength = carousel.querySelector('ul li:nth-child(2)').offsetLeft - carousel.querySelector('ul li:nth-child(1)').offsetLeft;
+          const nthchild = (Math.round((ele.scrollLeft/scrolllength)+1));
+          carousel.querySelector('ol li:nth-child('+nthchild+')').classList.add('selected'); 
+          carousel.querySelector('ul li:nth-child('+nthchild+')').classList.add('selected'); 
+          if(carousel.parentElement.parentElement.querySelector('.dynamictitle')) {
+              const title = carousel.querySelector('ul li:nth-child('+nthchild+') img').getAttribute('title'); 
+              if(title) carousel.parentElement.parentElement.querySelector('.dynamictitle').innerHTML = title;
+          }
+      }
+
+      const scrollTo = function(event) {
+          event.preventDefault();
+          ele.scrollLeft = ele.querySelector(this.getAttribute('href')).offsetLeft;
+      }
+      
+      const nextSlide = function() {
+          if(!carousel.querySelector('ol li:last-child').classList.contains('selected')) {
+              carousel.querySelector('ol li.selected').nextElementSibling.querySelector('a').click();
+          } else {
+              carousel.querySelector('ol li:first-child a').click();
+          }
+      }
+
+      const prevSlide = function() {
+          if(!carousel.querySelector('ol li:first-child').classList.contains('selected')) {
+              carousel.querySelector('ol li.selected').previousElementSibling.querySelector('a').click();
+          } else {
+              carousel.querySelector('ol li:last-child a').click();
+          }
+      }
+      
+      const setInteracted = function() {
+        ele.classList.add('interacted');
+      }
+          
+      // Attach the handlers
+      ele.addEventListener("scroll", debounce(setSelected));
+      ele.addEventListener("touchstart", setInteracted);
+      ele.addEventListener('keydown', function (e){
+          if(e.key == 'ArrowLeft') ele.classList.add('interacted');
+          if(e.key == 'ArrowRight') ele.classList.add('interacted');
+      });
+
+      nextarrow.addEventListener("click", nextSlide);
+      nextarrow.addEventListener("mousedown", setInteracted);
+      nextarrow.addEventListener("touchstart", setInteracted);
+
+      prevarrow.addEventListener("click", prevSlide);
+      prevarrow.addEventListener("mousedown", setInteracted);
+      prevarrow.addEventListener("touchstart", setInteracted);
+
+      bullets.forEach(function(bullet) {
+        bullet.querySelector('a').addEventListener('click', scrollTo);
+        bullet.addEventListener("mousedown", setInteracted);
+        bullet.addEventListener("touchstart", setInteracted);
+      });
+
+      //setInterval for autoplay
+      if(carousel.getAttribute('duration')) {
+        setInterval(function(){ 
+          if (ele != document.querySelector(".carousel:hover ul") && ele.classList.contains('interacted')==false) {
+            nextarrow.click();
+          }
+        }, carousel.getAttribute('duration'));
+      }
+    
+    
+  }); //end foreach
+
+}); //end onload
+
+
+
+/**
+* Debounce functions for better performance
+* (c) 2021 Chris Ferdinandi, MIT License, https://gomakethings.com
+* @param  {Function} fn The function to debounce
+*/
+function debounce (fn) {
+// Setup a timer
+let timeout;
+// Return a function to run debounced
+return function () {
+  // Setup the arguments
+  let context = this;
+  let args = arguments;
+  // If there's a timer, cancel it
+  if (timeout) {
+    window.cancelAnimationFrame(timeout);
   }
-}
-function setActiveCircles() {
-  const carouselCircles = carousel.querySelectorAll(".carousel__circle");
-  carouselCircles.forEach((item) => {
-    item.classList.remove("carousel__circle--active");
+  // Setup the new requestAnimationFrame()
+  timeout = window.requestAnimationFrame(function () {
+    fn.apply(context, args);
   });
-  if (window.innerWidth > 992) {
-    let items =
-      carouselItemWrapper.childElementCount < carousel.dataset.carouselColumns
-        ? carouselItemWrapper.childElementCount
-        : carousel.dataset.carouselColumns;
-    for (let i = 0; i < items; i++) {
-      carouselCircles[currentItem + i].classList.add(
-        "carousel__circle--active"
-      );
-    }
-  } else {
-    carouselCircles[currentItem].classList.add("carousel__circle--active");
-  }
+};
 }
-function previousItem() {
-  //show right button
-  carouselRightButton.classList.remove("carousel__arrow--right--hidden");
-  const slideWidth = carouselItem.clientWidth;
-  //if reached first item, hide left button
-
-  if (currentItem === 1) {
-    carouselLeftButton.classList.add("carousel__arrow--left--hidden");
-  }
-  if (currentItem !== 0) {
-    currentItem -= 1;
-  }
-  carouselItemWrapper.style.transform = `translateX(-${
-    (slideWidth + 32) * currentItem
-  }px)`;
-  setActiveCircles();
-  
-}
-
-function nextItem() {
-  //show the left button + remove margin-left
-  carouselLeftButton.classList.remove("carousel__arrow--left--hidden");
-  //slide the carousel
-  const slideWidth = carouselItem.clientWidth;
-  if (currentItem !== carouselItemWrapper.childElementCount - 1) {
-    currentItem += 1;
-  }
-    console.log(currentItem)
-  carouselItemWrapper.style.transform = `translateX(-${
-    (slideWidth + 32) * currentItem
-  }px)`;
-  //if reached last item, hide the right button
-  if (
-    currentItem + Number(carousel.dataset.carouselColumns) ===
-    carouselItemWrapper.childElementCount
-  ) {
-    carouselRightButton.classList.add("carousel__arrow--right--hidden");
-  }
-  setActiveCircles();
-  
-}
-
-
-
-function generateCarouselCircle() {
-  for (let i = 0; i < carouselItemWrapper.childElementCount; i++) {
-    const circle = document.createElement("div");
-    circle.classList.add("carousel__circle");
-    carouselCircleWrapper.appendChild(circle);
-  }
-  carouselCircleWrapper.classList.add("carousel__circle-wrapper--show");
-}
-
-setColumns();
-function setButtonsPosition() {
-  const imgHeight = document.querySelector("img")?.clientHeight;
-  if (imgHeight) {
-    document.querySelector(".carousel__arrow--right").style.top =
-      imgHeight / 2 + "px";
-    document.querySelector(".carousel__arrow--left").style.top =
-      imgHeight / 2 + "px";
-  }
-}
-
-carousel.classList.add("carousel--enabled");
-setButtonsPosition();
-carouselLeftButton.addEventListener("click", () => nextItem());
-carouselRightButton.addEventListener("click", () => previousItem());
-generateCarouselCircle();
-setActiveCircles();
-  carouselItemWrapper.addEventListener("touchmove", (e) => {
-    console.log("touchend", e);
-    nextItem();
-  });
-// onWindowResize(setButtonsPosition);
