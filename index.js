@@ -10,7 +10,6 @@ const carouselCircleWrapper = document.querySelector(
 );
 const setSelected = function () {
   const bullets = carouselCircleWrapper.querySelectorAll(".carousel__circle");
-  console.log(bullets);
   bullets.forEach(function (bullet) {
     bullet.classList.remove("carousel__circle--active");
   });
@@ -22,7 +21,6 @@ const setSelected = function () {
   const scrolllength =
     carousel.querySelector("ul li:nth-child(2)").offsetLeft -
     carousel.querySelector("ul li:nth-child(1)").offsetLeft;
-  console.log(scrolllength);
   const nthchild = Math.round(
     carouselItemWrapper.scrollLeft / scrolllength + 1
   );
@@ -34,23 +32,12 @@ const setSelected = function () {
     .classList.add("selected");
 };
 
-const scrollTo = function (event) {
-  event.preventDefault();
-  carouselItemWrapper.scrollLeft = carouselItemWrapper.querySelector(
-    this.getAttribute("href")
-  ).offsetLeft;
-};
-
 const setInteracted = function () {
   carouselItemWrapper.classList.add("interacted");
 };
 // Attach the handlers
-carouselItemWrapper.addEventListener("scroll", setSelected);
+carouselItemWrapper.addEventListener("scroll", debounce(setSelected));
 carouselItemWrapper.addEventListener("touchstart", setInteracted);
-carouselItemWrapper.addEventListener("keydown", function (e) {
-  if (e.key == "ArrowLeft") carouselItemWrapper.classList.add("interacted");
-  if (e.key == "ArrowRight") carouselItemWrapper.classList.add("interacted");
-});
 
 function setColumns() {
   if (carousel.dataset.carouselEnable === "true") {
@@ -98,7 +85,6 @@ function setAccessibilityAttributes() {
       carouselItemWrapper.children[currentItem + i]
         .querySelectorAll("a")
         .forEach((link) => link.removeAttribute("tabindex"));
-      console.log(currentItem);
     }
   } else {
     carouselItemWrapper.children[currentItem].ariaHidden = false;
@@ -167,43 +153,7 @@ function nextItem() {
   setAccessibilityAttributes();
 }
 
-function onCarouselSwipe() {
-  let touchstartX = 0;
-  let touchendX = 0;
-  carouselItemWrapper.addEventListener("touchdown", (e) => {
-    // console.log("touchdown", e.touches[0].screenX);
-  });
-  carouselItemWrapper.addEventListener("touchmove", (e) => {
-    // console.log("touchmove", e.touches[0].screenX);
-  });
-  carouselItemWrapper.addEventListener("touchend", (e) => {
-    // console.log("touchend", e);
-    nextItem();
-  });
-  // carouselItemWrapper.addEventListener("mousedown", (e) => {
-  //   touchstartX = e.screenX;
-  //   console.log("mousedown", e.screenX);
-
-  //   // document.body.style.overflow = "hidden";
-  // });
-  // carouselItemWrapper.addEventListener("mouseup", (e) => {
-  //   // document.body.style.overflow = "";
-  //   e.preventDefault();
-  //   console.log("mouseup", e.screenX);
-  //   touchendX = e.screenX;
-  //   if (touchendX < touchstartX && Math.abs(touchendX - touchstartX) > 50) {
-  //     nextItem();
-  //   }
-  //   console.log("moving");
-
-  //   if (touchendX > touchstartX && Math.abs(touchendX - touchstartX) > 50) {
-  //     previousItem();
-  //   }
-  // });
-}
-
 function generateCarouselCircle() {
-  console.log(carouselItemWrapper.childElementCount);
   for (let i = 0; i < carouselItemWrapper.childElementCount; i++) {
     const circle = document.createElement("div");
     circle.classList.add("carousel__circle");
@@ -230,4 +180,27 @@ carouselLeftButton.addEventListener("click", () => nextItem());
 carouselRightButton.addEventListener("click", () => previousItem());
 generateCarouselCircle();
 setActiveCircles();
-onCarouselSwipe();
+/**
+ * Debounce functions for better performance
+ * (c) 2021 Chris Ferdinandi, MIT License, https://gomakethings.com
+ * @param  {Function} fn The function to debounce
+ */
+function debounce(fn) {
+  // Setup a timer
+  let timeout;
+  // Return a function to run debounced
+  return function () {
+    // Setup the arguments
+    let context = this;
+    let args = arguments;
+    console.log(timeout);
+    // If there's a timer, cancel it
+    if (timeout) {
+      window.cancelAnimationFrame(timeout);
+    }
+    // Setup the new requestAnimationFrame()
+    timeout = window.requestAnimationFrame(function () {
+      fn.apply(context, args);
+    });
+  };
+}
