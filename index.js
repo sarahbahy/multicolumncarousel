@@ -127,53 +127,8 @@ carouselLeftButton.addEventListener("click", () => nextItem());
 carouselRightButton.addEventListener("click", () => previousItem());
 generateCarouselCircle();
 setActiveCircles();
-const touchSlide = (() => {
-    let start, move, change, sliderWidth
-
-    // Do this on initial touch on screen
-    carouselItemWrapper.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-      
-      console.log("started",e.touches[0].clientX)
-        // get the touche position of X on the screen
-        start = e.touches[0].clientX
-        // (each slide with) the width of the slider container divided by the number of slides
-        //sliderWidth = slider.clientWidth/trail.length
-      return false;
-    })
-    
-    // Do this on touchDrag on screen
-    carouselItemWrapper.addEventListener("touchmove", (e) => {
-        // prevent default function
-        e.preventDefault();
-      console.log("moving",e.touches[0].clientX)
-      
-        // get the touche position of X on the screen when dragging stops
-        move = e.touches[0].clientX
-        // Subtract initial position from end position and save to change variabla
-        change = start - move;
-      return false;
-      
-    })
-carouselItemWrapper.addEventListener("mousemove", (e) => {
-        // prevent default function
-        e.preventDefault();
-   nextItem();
-      return false;
-      
-    })
-    const mobile = (e) => {
-        // if change is greater than a quarter of sliderWidth, next else Do NOTHING
-        change > 50  ? nextItem() : null;
-      
-        // if change * -1 is greater than a quarter of sliderWidth, prev else Do NOTHING
-        (change * -1) > 50 ? previousItem() : null;
-        // reset all variable to 0
-        [start, move, change, sliderWidth] = [0,0,0,0]
-      return false;
-      
-    }
-    // call mobile on touch end
-    carouselItemWrapper.addEventListener("touchend", mobile)
-})()
+  carouselItemWrapper.addEventListener("touchend", (e) => {
+    // console.log("touchend", e);
+    nextItem();
+  });
 // onWindowResize(setButtonsPosition);
