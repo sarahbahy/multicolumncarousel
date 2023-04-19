@@ -176,8 +176,8 @@ function setButtonsPosition() {
 carousel.classList.add("carousel--enabled");
 setButtonsPosition();
 setAccessibilityAttributes();
-carouselLeftButton.addEventListener("click", () => nextItem());
-carouselRightButton.addEventListener("click", () => previousItem());
+carouselLeftButton.addEventListener("click", () => previousItem());
+carouselRightButton.addEventListener("click", () => nextItem());
 generateCarouselCircle();
 setActiveCircles();
 /**
